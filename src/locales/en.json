@@ -1058,6 +1058,8 @@
             "ControlButtons": "Control buttons",
             "CoordinateFields": "Coordinate fields",
             "Headline": "Toolhead",
+            "HeadroomText": "Move Z to {z} mm? That is more than a third of the printer's Z range of {max} mm. Make sure there is enough headroom above the bed.",
+            "HeadroomTitle": "Check headroom",
             "HomeFirst": "Home first",
             "MoveMap": "Move map",
             "PleaseConfigureSteps": "Please configure steps",

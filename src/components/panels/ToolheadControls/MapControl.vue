@@ -187,15 +187,26 @@
             <span>{{ positionLabel }}</span>
             <span v-if="SAFE_Z > 0">{{ $t('Panels.ToolheadControlPanel.TapsTravelAt', { z: SAFE_Z }) }}</span>
         </div>
+        <confirmation-dialog
+            v-model="showHeadroomDialog"
+            :icon="mdiArrowUpBold"
+            :title="$t('Panels.ToolheadControlPanel.HeadroomTitle')"
+            :text="$t('Panels.ToolheadControlPanel.HeadroomText', { z: pendingZLabel, max: zMax.toFixed(0) })"
+            :action-button-text="$t('Buttons.Yes')"
+            :cancel-button-text="$t('Buttons.No')"
+            action-button-color="primary"
+            @action="confirmHeadroom" />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Ref, Watch } from 'vue-property-decorator'
 import BaseMixin from '@/components/mixins/base'
+import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog.vue'
 import ControlMixin from '@/components/mixins/control'
 import ThemeMixin from '@/components/mixins/theme'
 import { defaultPrimaryColor } from '@/store/variables'
+import { mdiArrowUpBold } from '@mdi/js'
 
 type Point = [number, number]
 
@@ -237,12 +248,18 @@ const DRAG_LABEL_DELAY_MS = 250
 // pending target markers vanish once the head is this close
 const XY_ARRIVED_MM = 0.8
 const Z_ARRIVED_MM = 0.3
+// Z targets above this fraction of the Z range ask for confirmation that there is headroom
+const Z_CONFIRM_FRACTION = 1 / 3
 
-@Component
+@Component({
+    components: { ConfirmationDialog },
+})
 export default class MapControl extends Mixins(BaseMixin, ControlMixin, ThemeMixin) {
     @Ref() readonly root!: HTMLDivElement
     @Ref() readonly xyMap!: SVGSVGElement
     @Ref() readonly zMap!: SVGSVGElement
+
+    mdiArrowUpBold = mdiArrowUpBold
 
     SAFE_Z = SAFE_Z
     Z_STRIP_WIDTH = Z_STRIP_WIDTH
@@ -256,6 +273,8 @@ export default class MapControl extends Mixins(BaseMixin, ControlMixin, ThemeMix
     xyTarget: Point | null = null
     zTarget: number | null = null
     dragLabelVisible = false
+    showHeadroomDialog = false
+    pendingZ: number | null = null
     dragLabelTimer: number | null = null
     resizeObserver: ResizeObserver | null = null
 
@@ -452,6 +471,10 @@ export default class MapControl extends Mixins(BaseMixin, ControlMixin, ThemeMix
         return this.zDragPx > 32 ? this.zDragPx - 8 : this.zDragPx + 22
     }
 
+    get pendingZLabel(): string {
+        return this.pendingZ?.toFixed(1) ?? ''
+    }
+
     get zLines(): ZLine[] {
         const values = Z_LINE_CANDIDATES.filter((z) => z >= this.zMin && z < this.zMax)
         values.push(this.zMax)
@@ -484,6 +507,12 @@ export default class MapControl extends Mixins(BaseMixin, ControlMixin, ThemeMix
         if (this.zTarget !== null && Math.abs(pos[2] - this.zTarget) < Z_ARRIVED_MM) {
             this.zTarget = null
         }
+    }
+
+    @Watch('showHeadroomDialog')
+    onHeadroomDialogChange(visible: boolean): void {
+        // closing without confirming drops the pending target
+        if (!visible) this.pendingZ = null
     }
 
     @Watch('homedAxes')
@@ -670,6 +699,23 @@ export default class MapControl extends Mixins(BaseMixin, ControlMixin, ThemeMix
         }
         z = Math.min(Math.max(z, this.zMin), this.zMax)
 
+        if (z > this.zMax * Z_CONFIRM_FRACTION) {
+            this.pendingZ = z
+            this.showHeadroomDialog = true
+            return
+        }
+
+        this.moveZ(z)
+    }
+
+    confirmHeadroom(): void {
+        if (this.pendingZ === null) return
+
+        this.moveZ(this.pendingZ)
+        this.pendingZ = null
+    }
+
+    moveZ(z: number): void {
         this.sendAbsoluteMoves([{ axes: `Z${z.toFixed(1)}`, feedrate: this.feedrateZ }])
         this.zTarget = z
     }
