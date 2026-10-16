@@ -84,12 +84,12 @@
             </v-menu>
             <toolhead-panel-settings />
         </template>
-        <!-- MOVE TO CONTROL -->
-        <move-to-control />
         <!-- XY / Z MOVE MAPS -->
-        <v-container v-if="moveMapVisible" class="pt-0">
+        <v-container v-if="moveMapVisible" class="pb-0">
             <map-control />
         </v-container>
+        <!-- MOVE TO CONTROL -->
+        <move-to-control />
         <!-- AXIS CONTROL -->
         <v-container v-if="axisControlVisible">
             <component :is="`${controlStyle}-control`" />

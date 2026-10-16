@@ -8,6 +8,13 @@
         <v-list>
             <v-list-item class="minHeight36">
                 <v-checkbox
+                    v-model="showMoveMap"
+                    class="mt-0"
+                    hide-details
+                    :label="$t('Panels.ToolheadControlPanel.MoveMap')" />
+            </v-list-item>
+            <v-list-item class="minHeight36">
+                <v-checkbox
                     v-model="showPosition"
                     class="mt-0"
                     hide-details
@@ -19,13 +26,6 @@
                     class="mt-0"
                     hide-details
                     :label="$t('Panels.ToolheadControlPanel.CoordinateFields')" />
-            </v-list-item>
-            <v-list-item class="minHeight36">
-                <v-checkbox
-                    v-model="showMoveMap"
-                    class="mt-0"
-                    hide-details
-                    :label="$t('Panels.ToolheadControlPanel.MoveMap')" />
             </v-list-item>
             <v-list-item class="minHeight36">
                 <v-checkbox
