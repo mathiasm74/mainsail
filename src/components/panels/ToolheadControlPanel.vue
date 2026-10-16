@@ -86,6 +86,10 @@
         </template>
         <!-- MOVE TO CONTROL -->
         <move-to-control />
+        <!-- XY / Z MOVE MAPS -->
+        <v-container v-if="moveMapVisible" class="pt-0">
+            <map-control />
+        </v-container>
         <!-- AXIS CONTROL -->
         <v-container v-if="axisControlVisible">
             <component :is="`${controlStyle}-control`" />
@@ -121,6 +125,7 @@ import BaseMixin from '../mixins/base'
 import CircleControl from '@/components/panels/ToolheadControls/CircleControl.vue'
 import ControlMixin from '@/components/mixins/control'
 import CrossControl from '@/components/panels/ToolheadControls/CrossControl.vue'
+import MapControl from '@/components/panels/ToolheadControls/MapControl.vue'
 import MoveToControl from '@/components/panels/ToolheadControls/MoveToControl.vue'
 import Panel from '@/components/ui/Panel.vue'
 import ToolSlider from '@/components/inputs/ToolSlider.vue'
@@ -132,6 +137,7 @@ import { mdiDotsVertical, mdiEngineOff, mdiGamepad, mdiSpeedometer, mdiMenuDown,
         BarsControl,
         CircleControl,
         CrossControl,
+        MapControl,
         MoveToControl,
         Panel,
         ToolSlider,
@@ -168,6 +174,12 @@ export default class ToolheadControlPanel extends Mixins(BaseMixin, ControlMixin
         return !(this.isPrinting && (this.$store.state.gui.control.hideDuringPrint ?? false))
     }
 
+    get moveMapVisible() {
+        if (!this.showMoveMap) return false
+
+        return !(this.isPrinting && (this.$store.state.gui.control.hideDuringPrint ?? false))
+    }
+
     get showButtons() {
         if (this.controlStyle !== 'bars' && (this.existsZtilt || this.existsQGL)) return true
 
@@ -176,6 +188,10 @@ export default class ToolheadControlPanel extends Mixins(BaseMixin, ControlMixin
 
     get showControl(): boolean {
         return this.$store.state.gui.view.toolhead.showControl ?? true
+    }
+
+    get showMoveMap(): boolean {
+        return this.$store.state.gui.view.toolhead.showMoveMap ?? true
     }
 
     get showZOffset(): boolean {

@@ -306,6 +306,7 @@ export const getDefaultState = (): GuiState => {
             toolhead: {
                 showPosition: true,
                 showCoordinates: true,
+                showMoveMap: true,
                 showControl: true,
                 showZOffset: true,
                 showSpeedFactor: true,

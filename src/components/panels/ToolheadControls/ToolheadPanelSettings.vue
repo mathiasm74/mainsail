@@ -22,6 +22,13 @@
             </v-list-item>
             <v-list-item class="minHeight36">
                 <v-checkbox
+                    v-model="showMoveMap"
+                    class="mt-0"
+                    hide-details
+                    :label="$t('Panels.ToolheadControlPanel.MoveMap')" />
+            </v-list-item>
+            <v-list-item class="minHeight36">
+                <v-checkbox
                     v-model="showControl"
                     class="mt-0"
                     hide-details
@@ -69,6 +76,14 @@ export default class ToolheadPanelSettings extends Mixins(BaseMixin) {
 
     set showCoordinates(newVal: boolean) {
         this.$store.dispatch('gui/saveSetting', { name: 'view.toolhead.showCoordinates', value: newVal })
+    }
+
+    get showMoveMap(): boolean {
+        return this.$store.state.gui.view.toolhead.showMoveMap ?? true
+    }
+
+    set showMoveMap(newVal: boolean) {
+        this.$store.dispatch('gui/saveSetting', { name: 'view.toolhead.showMoveMap', value: newVal })
     }
 
     get showControl(): boolean {

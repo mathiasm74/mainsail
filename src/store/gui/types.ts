@@ -200,6 +200,7 @@ export interface GuiState {
         toolhead: {
             showPosition: boolean
             showCoordinates: boolean
+            showMoveMap: boolean
             showControl: boolean
             showZOffset: boolean
             showSpeedFactor: boolean

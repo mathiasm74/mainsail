@@ -1058,6 +1058,8 @@
             "ControlButtons": "Control buttons",
             "CoordinateFields": "Coordinate fields",
             "Headline": "Toolhead",
+            "HomeFirst": "Home first",
+            "MoveMap": "Move map",
             "PleaseConfigureSteps": "Please configure steps",
             "Position": "Position",
             "PositionOutput": "Position output",
@@ -1065,6 +1067,7 @@
             "Relative": "relative",
             "SettingsInterfaceControl": "Settings > Interface > Control",
             "SpeedFactor": "Speed factor",
+            "TapsTravelAt": "Taps travel at Z ≥ {z}",
             "ZOffset": "Z-Offset",
             "ZTilt": "Z-Tilt"
         },
