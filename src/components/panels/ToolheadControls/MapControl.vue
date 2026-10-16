@@ -183,9 +183,8 @@
                 <rect v-else x="0" y="0" :width="Z_STRIP_WIDTH" :height="mapHeight" fill="#000" fill-opacity="0.45" />
             </svg>
         </div>
-        <div class="d-flex justify-space-between text--secondary caption mt-1 px-1">
-            <span>{{ positionLabel }}</span>
-            <span v-if="SAFE_Z > 0">{{ $t('Panels.ToolheadControlPanel.TapsTravelAt', { z: SAFE_Z }) }}</span>
+        <div v-if="SAFE_Z > 0" class="text-right text--secondary caption mt-1 px-1">
+            {{ $t('Panels.ToolheadControlPanel.TapsTravelAt', { z: SAFE_Z }) }}
         </div>
         <confirmation-dialog
             v-model="showHeadroomDialog"
@@ -402,12 +401,6 @@ export default class MapControl extends Mixins(BaseMixin, ControlMixin, ThemeMix
 
     get currentZPx(): number {
         return this.zToPx(this.position[2])
-    }
-
-    get positionLabel(): string {
-        const [x, y, z] = this.position
-
-        return `X ${x.toFixed(1)} · Y ${y.toFixed(1)} · Z ${z.toFixed(2)}`
     }
 
     get xyTargetPx(): Point {
