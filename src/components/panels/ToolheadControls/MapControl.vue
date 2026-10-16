@@ -219,7 +219,7 @@ const Z_STRIP_WIDTH = 64
 const Z_PAD = 14
 const GAP = 12
 const GRID_CELLS = 6
-const MAX_MAP_HEIGHT = 360
+const MAX_MAP_HEIGHT = 270
 const MIN_MAP_HEIGHT = 160
 // keeps rings drawn at the bed edge fully inside the map
 const EDGE_INSET_PX = 10
