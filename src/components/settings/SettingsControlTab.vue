@@ -68,6 +68,33 @@
                         @blur="blurFeedrateZ" />
                 </settings-row>
                 <v-divider class="my-2" />
+                <settings-row
+                    :title="$t('Settings.ControlTab.MoveMapBedSize')"
+                    :sub-title="$t('Settings.ControlTab.MoveMapBedSizeDescription')">
+                    <div class="d-flex" style="gap: 8px">
+                        <v-text-field
+                            v-model="mapBedSizeX"
+                            type="number"
+                            prefix="X"
+                            suffix="mm"
+                            :placeholder="$t('Settings.ControlTab.MoveMapBedSizeAuto')"
+                            hide-details
+                            outlined
+                            dense
+                            hide-spin-buttons />
+                        <v-text-field
+                            v-model="mapBedSizeY"
+                            type="number"
+                            prefix="Y"
+                            suffix="mm"
+                            :placeholder="$t('Settings.ControlTab.MoveMapBedSizeAuto')"
+                            hide-details
+                            outlined
+                            dense
+                            hide-spin-buttons />
+                    </div>
+                </settings-row>
+                <v-divider class="my-2" />
                 <!-- CONTROL STYLE CROSS SPECIFICS -->
                 <template v-if="controlStyle === 'cross'">
                     <settings-row :title="$t('Settings.ControlTab.MoveDistancesInMm')" :mobile-second-row="true">
@@ -405,6 +432,22 @@ export default class SettingsControlTab extends Mixins(BaseMixin, ControlMixin, 
         this.$store.dispatch('gui/saveSetting', { name: 'control.feedrateZ', value: newVal })
     }
 
+    get mapBedSizeX(): string {
+        return this.$store.state.gui.control.mapBedSizeX?.toString() ?? ''
+    }
+
+    set mapBedSizeX(newVal: string) {
+        this.$store.dispatch('gui/saveSetting', { name: 'control.mapBedSizeX', value: this.parseBedSize(newVal) })
+    }
+
+    get mapBedSizeY(): string {
+        return this.$store.state.gui.control.mapBedSizeY?.toString() ?? ''
+    }
+
+    set mapBedSizeY(newVal: string) {
+        this.$store.dispatch('gui/saveSetting', { name: 'control.mapBedSizeY', value: this.parseBedSize(newVal) })
+    }
+
     get offsetsZ() {
         const steps = this.$store.state.gui.control.offsetsZ
         return steps.sort(function (a: number, b: number) {
@@ -573,6 +616,13 @@ export default class SettingsControlTab extends Mixins(BaseMixin, ControlMixin, 
 
     blurFeedrateZ() {
         if (!(this.feedrateZ > 0)) this.feedrateZ = 25
+    }
+
+    // empty or non-positive input clears the override, so the map falls back to the axis limits
+    parseBedSize(value: string): number | null {
+        const size = parseFloat(value)
+
+        return isNaN(size) || size <= 0 ? null : size
     }
 
     onlyUnique(value: number, index: number, self: number[]) {

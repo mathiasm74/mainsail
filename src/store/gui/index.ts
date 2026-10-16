@@ -51,6 +51,8 @@ export const getDefaultState = (): GuiState => {
             stepsCircleXY: [1, 10, 50, 100],
             stepsCircleZ: [0.1, 1, 10, 50],
             selectedCrossStep: null,
+            mapBedSizeX: null,
+            mapBedSizeY: null,
             reverseX: false,
             reverseY: false,
             reverseZ: false,

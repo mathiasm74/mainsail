@@ -291,20 +291,33 @@ export default class MapControl extends Mixins(BaseMixin, ControlMixin, ThemeMix
         return this.$store.state.printer.toolhead?.axis_maximum ?? []
     }
 
+    /**
+     * The map represents the bed, not the travel area: axis limits often exceed the
+     * physical plate, which would put the center snap point off the bed's center.
+     * A configured bed size overrides the axis limits.
+     */
+    get mapBedSizeX(): number | null {
+        return this.$store.state.gui.control.mapBedSizeX ?? null
+    }
+
+    get mapBedSizeY(): number | null {
+        return this.$store.state.gui.control.mapBedSizeY ?? null
+    }
+
     get bedXMin(): number {
-        return this.axisMinimum[0] ?? 0
+        return this.mapBedSizeX ? 0 : (this.axisMinimum[0] ?? 0)
     }
 
     get bedXMax(): number {
-        return this.axisMaximum[0] ?? 200
+        return this.mapBedSizeX ?? this.axisMaximum[0] ?? 200
     }
 
     get bedYMin(): number {
-        return this.axisMinimum[1] ?? 0
+        return this.mapBedSizeY ? 0 : (this.axisMinimum[1] ?? 0)
     }
 
     get bedYMax(): number {
-        return this.axisMaximum[1] ?? 200
+        return this.mapBedSizeY ?? this.axisMaximum[1] ?? 200
     }
 
     get zMin(): number {

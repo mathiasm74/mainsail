@@ -33,6 +33,8 @@ export interface GuiState {
         stepsCircleXY: number[]
         stepsCircleZ: number[]
         selectedCrossStep: null | number
+        mapBedSizeX: number | null
+        mapBedSizeY: number | null
         reverseX: boolean
         reverseY: boolean
         reverseZ: boolean
